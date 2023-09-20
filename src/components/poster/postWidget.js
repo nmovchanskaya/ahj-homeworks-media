@@ -71,7 +71,7 @@ export default class PostWidget {
       return `
         <div class="post" data-id="${post.id}">
             <div class="post__date">
-              ${post.date.getDate()}.${post.date.getMonth()}.${post.date.getFullYear()} 	${post.date.getHours()}:${post.date.getMinutes()}
+              ${post.date.getDate()}.${post.date.getMonth()}.${post.date.getFullYear()} ${post.date.getHours()}:${post.date.getMinutes()}
             </div>
             <div class="post__content">
               <video class="${post.content.className}" src="${post.content.src}" controls>
@@ -87,7 +87,7 @@ export default class PostWidget {
     return `
         <div class="post" data-id="${post.id}">
             <div class="post__date">
-              ${post.date.getDate()}.${post.date.getMonth()}.${post.date.getFullYear()} 	${post.date.getHours()}:${post.date.getMinutes()}
+              ${post.date.getDate()}.${post.date.getMonth()}.${post.date.getFullYear()} ${post.date.getHours()}:${post.date.getMinutes()}
             </div>
             <div class="post__content">
               ${post.content}
@@ -249,7 +249,7 @@ export default class PostWidget {
     this.toggleVideoBlock();
     this.form.appendChild(this.videoControls);
 
-    this.videoPlayer.addEventListener('canplay', (e) => {
+    this.videoPlayer.addEventListener('canplay', () => {
       this.timer = new Timer(0, 0);
       setInterval(this.updateTimer, 1000);
       this.videoPlayer.play();
@@ -268,8 +268,8 @@ export default class PostWidget {
       chunks.push(event.data);
     });
 
-    recorder.addEventListener('stop', async (e) => {
-      //create new post with video player in it
+    recorder.addEventListener('stop', async () => {
+      // create new post with video player in it
       if (!this.cancelled) {
         const blob = new Blob(chunks);
 
