@@ -71,7 +71,7 @@ export default class PostWidget {
       return `
         <div class="post" data-id="${post.id}">
             <div class="post__date">
-              ${post.date.getDate()}.${post.date.getMonth()}.${post.date.getFullYear()} ${post.date.getHours()}:${post.date.getMinutes()}
+              ${post.date.getDate().toString().padStart(2, '0')}.${post.date.getMonth().toString().padStart(2, '0')}.${post.date.getFullYear()} ${post.date.getHours().toString().padStart(2, '0')}:${post.date.getMinutes().toString().padStart(2, '0')}
             </div>
             <div class="post__content">
               <video class="${post.content.className}" src="${post.content.src}" controls>
@@ -87,7 +87,7 @@ export default class PostWidget {
     return `
         <div class="post" data-id="${post.id}">
             <div class="post__date">
-              ${post.date.getDate()}.${post.date.getMonth()}.${post.date.getFullYear()} ${post.date.getHours()}:${post.date.getMinutes()}
+              ${post.date.getDate().toString().padStart(2, '0')}.${post.date.getMonth().toString().padStart(2, '0')}.${post.date.getFullYear()} ${post.date.getHours().toString().padStart(2, '0')}:${post.date.getMinutes().toString().padStart(2, '0')}
             </div>
             <div class="post__content">
               ${post.content}
