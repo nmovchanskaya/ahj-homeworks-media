@@ -241,6 +241,7 @@ export default class PostWidget {
 
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
+      audio: true
     });
     this.stream = stream;
 
