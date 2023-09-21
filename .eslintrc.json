@@ -35,6 +35,8 @@
         "array-callback-return": "off",
         "import/prefer-default-export": "off",
         "no-useless-constructor": "off",
-        "no-empty-function": "off"
+        "no-empty-function": "off",
+        "prefer-destructuring":"off",
+        "no-empty": "off"
     }
 }
