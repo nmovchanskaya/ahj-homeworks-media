@@ -20,8 +20,8 @@ export default class Post {
     try {
       position = await this.getCoordinates();
     } catch {
-      console.log('position wrong');
-      throw new Error();
+      console.log('No access to geolocation');
+      throw new Error('No access to geolocation');
     }
     const { latitude, longitude } = position.coords;
     console.log(`lat ${latitude}`);

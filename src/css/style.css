@@ -38,7 +38,6 @@ input.post-text {
     width: 400px;
     padding: 20px;
     border: 1px solid rgb(160, 159, 159);
-    display: none;
     background-color: white;
 }
 .warning_active {

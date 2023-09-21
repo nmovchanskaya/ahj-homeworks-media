@@ -13,6 +13,7 @@ export default class PostWidget {
     this.onAddVideoSubmit = this.onAddVideoSubmit.bind(this);
     this.updateTimer = this.updateTimer.bind(this);
     this.onStopVideoAndHide = this.onStopVideoAndHide.bind(this);
+    this.onWarningSubmit = this.onWarningSubmit.bind(this);
   }
 
   addFormMarkup() {
@@ -56,6 +57,8 @@ export default class PostWidget {
 
     this.form.addEventListener('submit', this.onAddSubmit);
     this.videoBtn.addEventListener('click', this.onAddVideoSubmit);
+    this.videoSaveBtn.addEventListener('click', this.onStopVideoAndHide);
+    this.videoCancelBtn.addEventListener('click', this.onStopVideoAndHide);
   }
 
   bindToDOMWarning() {
@@ -110,6 +113,14 @@ export default class PostWidget {
     this.postContainer = div;
   }
 
+  renderWarning() {
+    const warningForm = document.createElement('form');
+    warningForm.className = 'warning';
+    warningForm.name = 'warning';
+    warningForm.innerHTML = this.warningFormMarkup();
+    this.container.insertBefore(warningForm, null);
+  }
+
   renderContent() {
     // render list of posts
     this.renderPosts();
@@ -123,16 +134,6 @@ export default class PostWidget {
 
     // add listeners
     this.bindToDOMAdd();
-
-    // render warning form
-    const warningForm = document.createElement('form');
-    warningForm.className = 'warning';
-    warningForm.name = 'warning';
-    warningForm.innerHTML = this.warningFormMarkup();
-    this.container.insertBefore(warningForm, null);
-
-    // add listeners
-    this.bindToDOMWarning();
   }
 
   clearPosts() {
@@ -176,35 +177,38 @@ export default class PostWidget {
   }
 
   async showWarning() {
-    this.warningForm.classList.toggle('warning_active');
+    this.renderWarning();
+    this.bindToDOMWarning();
 
-    const warningClosed = new Promise((resolve, reject) => {
+    this.warningClosed = new Promise((resolve, reject) => {
       // create warning close handler, and call resolve in it
       this.warningForm.addEventListener('submit', (e) => {
-        this.onWarningSubmit(e);
-        resolve();
+        try {
+          this.onWarningSubmit(e);
+          resolve();
+        } catch (err) {}
       });
     });
 
-    await warningClosed;
+    await this.warningClosed;
   }
 
   onWarningSubmit(e) {
     e.preventDefault();
-    const coords = this.inputPosElem.value;
-    const coordsArr = coords.split(',');
-    const latitude = Number(coordsArr[0]);
-    const longitude = Number(coordsArr[1]);
+    const text = this.inputPosElem.value;
+    try {
+      this.currentPost.position = Position.checkCoords(text);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+      throw new Error(err);
+    }
 
-    this.currentPost.position = new Position(latitude, longitude);
-
-    this.inputPosElem.value = '';
-    this.warningForm.classList.toggle('warning_active');
+    this.warningForm.remove();
   }
 
   onWarningCancel(e) {
-    this.inputPosElem.value = '';
-    this.warningForm.classList.toggle('warning_active');
+    this.warningForm.remove();
   }
 
   updateTimer() {
@@ -233,15 +237,11 @@ export default class PostWidget {
   }
 
   async onAddVideoSubmit(e) {
-    // remove old listeners
-    this.videoSaveBtn.removeEventListener('click', this.onStopVideoAndHide);
-    this.videoCancelBtn.removeEventListener('click', this.onStopVideoAndHide);
-
     this.videoBtn.classList.toggle('hidden');
 
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
-      audio: true
+      audio: true,
     });
     this.stream = stream;
 
@@ -284,9 +284,5 @@ export default class PostWidget {
     });
 
     recorder.start();
-
-    // add listeners
-    this.videoSaveBtn.addEventListener('click', this.onStopVideoAndHide);
-    this.videoCancelBtn.addEventListener('click', this.onStopVideoAndHide);
   }
 }
